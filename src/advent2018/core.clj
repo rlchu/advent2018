@@ -13,5 +13,19 @@
       (map #(apply + (rest %)))
       (apply +))))
 
+(defn d1p2-2017 [number] 
+  (let [extend-list     (fn [c]
+                          (take (* 2 (count c)) (cycle c)))
+        
+        list-of-digits  (digits number)
+        length          (count list-of-digits)]
+   (->> list-of-digits
+       extend-list
+       (drop (/ length 2))
+       (map vector list-of-digits)
+       (filter (fn [[x y]] (= x y)))
+      
+      
+      )))
 
 
