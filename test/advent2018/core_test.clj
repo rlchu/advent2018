@@ -8,8 +8,8 @@
         (day-one-2017 1234)     => 0
         (day-one-2017 1111)     => 4
         (day-one-2017 1122)     => 3
-        (day-one-2017 91212129) => 9 )
+        (day-one-2017 91212129) => 9)
 
-  (fact "challenge input passes: "
-        (day-one-2017 (bigint (clojure.string/trim-newline (slurp "day1-2017.input")))) => 1175))
+  (fact "part 1 challenge input passes: "
+        (day-one-2017 (-> "inputs/day1-2017.input" slurp clojure.string/trim-newline bigint)) => 1175))
 
