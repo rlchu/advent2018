@@ -1,4 +1,4 @@
-(ns advent2018.core)
+(ns advent2018.2017day1)
 
 (defn digits [number]  
   (mapv #(Character/digit % 10) (str number)))
