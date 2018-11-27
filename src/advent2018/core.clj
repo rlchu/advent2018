@@ -24,8 +24,7 @@
        (drop (/ length 2))
        (map vector list-of-digits)
        (filter (fn [[x y]] (= x y)))
-      
-      
-      )))
+       (map first)
+       (apply +))))
 
 
