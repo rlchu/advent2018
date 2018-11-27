@@ -1,3 +1,6 @@
 .lein-repl-history
 .rebel_readline_history
+.nrepl-port
+
 /target/*
+*.swp
