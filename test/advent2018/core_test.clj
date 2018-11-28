@@ -6,8 +6,11 @@
 (def day-one-input 
   (-> "inputs/day1-2017.input" slurp clojure.string/trim-newline bigint))
 
-(def day-two-input 
-  (-> "inputs/day2-2017.input" slurp ))
+(def day-two-input
+  (-> "inputs/day2-2017.input" slurp))
+
+(def day-two-input-b 
+  (-> "inputs/day2-2017b.input" slurp))
 
 (facts "about  1:"
        (fact "provided test cases pass:"
@@ -31,8 +34,10 @@
        (fact "part 2 challenge input passes: "
              (d1p2-2017 day-one-input) => 1166))
 
-(facts "about  2:"
+(facts "about  2017 Day 2 part 1:"
        (fact "test case passes:"
-             (= 3 4) => true))
+             (d2p1-2017 day-two-input-b) => 18)
+       (fact "test case passes:"
+             (d2p1-2017 day-two-input)   => 43074))
 
 
