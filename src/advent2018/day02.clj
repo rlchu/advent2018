@@ -7,12 +7,12 @@
                        (map sort) 
                        (map #(partition-by identity %))
                        (map (fn [x] (some #(= n (count %)) x ))))
-        counted  (((fnil frequencies 0) part-data) true)]
+        counted   (((fnil frequencies 0) part-data) true)]
     counted))
 
 (defn- common [x y n]
   (let [vectorized (map vector x y)
-        filtered   (filter #(= (first %)  (last %)) vectorized)]
+        filtered   (filter (fn [[x y]] (= x y)) vectorized) ]
     (when (= n (- (count vectorized) (count filtered))) 
       filtered))) 
 
