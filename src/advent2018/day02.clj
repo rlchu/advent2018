@@ -12,8 +12,7 @@
 
 (defn- common [x y n]
   (let [vectorized (map vector x y)
-        pairs      (filter (fn [[x y]] (= x y)) vectorized)
-        filtered   (filter #(= (first %)  (last %)) pairs)]
+        filtered   (filter #(= (first %)  (last %)) vectorized)]
     (when (= n (- (count vectorized) (count filtered))) 
       filtered))) 
 
@@ -22,10 +21,11 @@
 
 (defn solve-02 [data] 
   (let [input (clojure.string/split-lines data)]
-   (->>
-    (for [x input y input] (common x y 1))
-    (remove nil?)
-    first
-    (map first)
-    (apply str))))
+    (->>
+      (for [x input y input] (common x y 1))
+      (remove nil?)
+      first
+      (map first)
+      (apply str))))
+
 
