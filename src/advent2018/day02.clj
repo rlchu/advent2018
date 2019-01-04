@@ -1,6 +1,11 @@
 (ns advent2018.day02
   (:require [advent2018.helpers :refer [parse-int]]))
 
+
+(def input
+  (-> "inputs/day02.input" slurp ))
+
+
 (defn- checksum-n [data n]
   (let [part-data (->> data 
                        clojure.string/split-lines
@@ -10,14 +15,17 @@
         counted   (((fnil frequencies 0) part-data) true)]
     counted))
 
+
 (defn- common [x y n]
   (let [vectorized (map vector x y)
         filtered   (filter (fn [[x y]] (= x y)) vectorized) ]
     (when (= n (- (count vectorized) (count filtered))) 
       filtered))) 
 
+
 (defn solve-01 [data]
   (* (checksum-n data 2) (checksum-n data 3)))
+
 
 (defn solve-02 [data] 
   (let [input (clojure.string/split-lines data)]
@@ -29,3 +37,4 @@
       (apply str))))
 
 
+(solve-01 input)
