@@ -8,7 +8,7 @@
 (def input
   (-> "inputs/day03.input" slurp ))
 
-(def dat (clojure.string/split-lines sample-input))
+(def dat (clojure.string/split-lines input))
 
 (defn- parse-out-coord-info [dat]
   (->> dat
@@ -35,7 +35,7 @@
        count
        ))
 
-(solve-01 dat)
+ (solve-01 dat)
 
 (defn- parse-line-num-coord-info [dat]
   (->> dat
@@ -55,12 +55,19 @@
 (defn rotate [[x & xs]]
   (concat xs [x]))
 
-(->> dat
-     parse-line-num-coord-info
-     (map assoc-line-with-grid-points)
-     rotate
-     rotate
-     compare-first-shape-to-union-of-rest
-     )
+(def list-of-shapes
+  (->> dat
+       parse-line-num-coord-info
+       (map assoc-line-with-grid-points)
+       ))
 
+(defn rotate-and-check [list-of-shapes]
+  ; painfully slow
+  (let [rotated-list (rotate list-of-shapes)
+        compare-set (compare-first-shape-to-union-of-rest rotated-list)]
+    (if (empty? compare-set)
+      (ffirst rotated-list)
+       (recur rotated-list))))
+
+(rotate-and-check list-of-shapes)
 
