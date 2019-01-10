@@ -8,7 +8,7 @@
 (def input
   (-> "inputs/day03.input" slurp ))
 
-(def dat (clojure.string/split-lines sample-input))
+(def dat (clojure.string/split-lines input))
 
 (defn- parse-out-coord-info [dat]
   (->> dat
@@ -25,8 +25,8 @@
   (frequencies
    (->> dat
         (map parse-out-coord-info)
-        (map #(apply generate-grid-points %))
-        (apply concat))))
+        (mapcat #(apply generate-grid-points %))
+        )))
 
 (defn solve-01 [dat]
   (->> dat
@@ -35,7 +35,7 @@
        count
        ))
 
-(solve-01 dat)
+ (solve-01 dat)
 
 (defn- parse-line-num-coord-info [dat]
   (->> dat
@@ -45,13 +45,29 @@
 (defn assoc-line-with-grid-points [[ln & pnts]]
   [ln (apply generate-grid-points pnts)])
 
+(defn compare-first-shape-to-union-of-rest [[x & xs]]
+  (let [line-num  (first x)
+        x-set     (apply set (rest x))
+        xs-set    (set (apply concat (mapcat rest xs)))]
+    (clojure.set/intersection x-set xs-set)
+    ))
 
-(->> dat
-     ; ["#1 @ 1,3: 4x4" "  #2 @ 3,1: 4x4" "  #3 @ 5,5: 2x2"]
-     parse-line-num-coord-info
-     ; ((1 1 3 4 4) (2 3 1 4 4) (3 5 5 2 2))
-     (map assoc-line-with-grid-points)
-     ; ((1 [*set of points*]) (2 [*set of points*])
-     )
+(defn rotate [[x & xs]]
+  (concat xs [x]))
 
+(def list-of-shapes
+  (->> dat
+       parse-line-num-coord-info
+       (map assoc-line-with-grid-points)
+       ))
+
+(defn rotate-and-check [list-of-shapes]
+  ; painfully slow
+  (let [rotated-list (rotate list-of-shapes)
+        compare-set (compare-first-shape-to-union-of-rest rotated-list)]
+    (if (empty? compare-set)
+      (ffirst rotated-list)
+       (recur rotated-list))))
+
+(rotate-and-check list-of-shapes)
 
