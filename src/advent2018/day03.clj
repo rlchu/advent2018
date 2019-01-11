@@ -8,7 +8,7 @@
 (def input
   (-> "inputs/day03.input" slurp ))
 
-(def dat (clojure.string/split-lines sample-input))
+(def dat (clojure.string/split-lines input))
 
 (defn- parse-out-coord-info [dat]
   (->> dat
@@ -33,13 +33,20 @@
         (mapcat #(apply generate-grid-points %))
         )))
 
-(->> dat
-     parse-line-num-coord-info
-     (mapcat #(apply generate-grid-points %))
-     (group-by (fn [[_ x]] x))
-     (filter (fn [[k v]] (not= 1 (count v))))
-     )
+(def x 
+  (->> dat
+       parse-line-num-coord-info
+       (mapcat #(apply generate-grid-points %))
+       (group-by (fn [[_ x]] x))
+       (filter (fn [[k v]] (not= 1 (count v))))
+       (mapcat rest)
+       (map #(map first %))
+       flatten
+       set
+       ))
 
+(clojure.set/difference
+ (set (range 1 1238)) x)
 
 
 (defn solve-01 [dat]
