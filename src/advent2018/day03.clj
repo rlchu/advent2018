@@ -27,9 +27,7 @@
        (group-by (fn [[_ x]] x))
        (filter (fn [[k v]] (not= 1 (count v))))
        count
-       )
-  )
-
+       ))
 
 (defn solve-02 [dat] 
   (let [length (count (parse-line-num-coord-info dat))
@@ -42,12 +40,11 @@
                                      (map #(map first %))
                                      flatten
                                      set
-                                     )]
-
+                                     )
+        set-of-integers-full-range (set (range 1 (inc length))) ]
     (first (clojure.set/difference
-            (set (range 1 1238)) set-of-overlapped-lines))))
-
-
+            set-of-integers-full-range
+            set-of-overlapped-lines))))
 
 (solve-01 dat)
 
