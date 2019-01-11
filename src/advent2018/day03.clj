@@ -37,7 +37,6 @@
                                         (filter (fn [[_ v]] (not= 1 (count v))))
                                         (mapcat rest)
                                         (reduce #(into %1 (map first %2)) #{}))
-                                        )
         set-of-integers-full-range (set (range 1 (inc length)))]
     (first (clojure.set/difference
             set-of-integers-full-range
@@ -45,5 +44,5 @@
 
 (solve-01 dat)
 
-(time (solve-02 dat))
+(solve-02 dat)
 
