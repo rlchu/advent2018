@@ -35,7 +35,7 @@
        count
        ))
 
- (solve-01 dat)
+(solve-01 dat)
 
 (defn- parse-line-num-coord-info [dat]
   (->> dat
@@ -46,9 +46,8 @@
   [ln (apply generate-grid-points pnts)])
 
 (defn compare-first-shape-to-union-of-rest [[x & xs]]
-  (let [line-num  (first x)
-        x-set     (apply set (rest x))
-        xs-set    (set (apply concat (mapcat rest xs)))]
+  (let [x-set     (apply set (rest x))
+        xs-set    (time (set (apply concat (mapcat rest xs))))]
     (clojure.set/intersection x-set xs-set)
     ))
 
@@ -58,16 +57,16 @@
 (def list-of-shapes
   (->> dat
        parse-line-num-coord-info
-       (map assoc-line-with-grid-points)
+       (mapv assoc-line-with-grid-points)
        ))
 
 (defn rotate-and-check [list-of-shapes]
-  ; painfully slow
+; painfully slow
   (let [rotated-list (rotate list-of-shapes)
-        compare-set (compare-first-shape-to-union-of-rest rotated-list)]
+        compare-set  (compare-first-shape-to-union-of-rest rotated-list)]
     (if (empty? compare-set)
       (ffirst rotated-list)
-       (recur rotated-list))))
+      (recur rotated-list))))
 
 (rotate-and-check list-of-shapes)
 
