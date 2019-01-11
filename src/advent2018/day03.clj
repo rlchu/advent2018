@@ -29,7 +29,7 @@
        count))
 
 (defn solve-02 [dat]
-  (let [length                     (count (parse-line-num-coord-info dat))
+  (let [length                     (count dat)
         set-of-overlapped-lines    (->> dat
                                         parse-line-num-coord-info
                                         (mapcat #(apply generate-grid-points %))
