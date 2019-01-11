@@ -10,12 +10,6 @@
 
 (def dat (clojure.string/split-lines input))
 
-(defn- parse-out-coord-info [dat]
-  (->> dat
-       (re-seq #"\d+")
-       (drop 1)
-       (map parse-int)))
-
 (defn- parse-line-num-coord-info [dat]
   (->> dat
        (map #(re-seq #"\d+" %))
@@ -26,12 +20,16 @@
         b (range y (+ y yl))]
     [line-num [a b]]))
 
-(defn- get-overlap-frequencies [dat]
-  (frequencies
-   (->> dat
-        parse-line-num-coord-info
-        (mapcat #(apply generate-grid-points %))
-        )))
+(defn solve-01 [dat] 
+  (->> dat
+       parse-line-num-coord-info
+       (mapcat #(apply generate-grid-points %))
+       (group-by (fn [[_ x]] x))
+       (filter (fn [[k v]] (not= 1 (count v))))
+       count
+       )
+  )
+
 
 (defn solve-02 [dat] 
   (let [length (count (parse-line-num-coord-info dat))
@@ -50,13 +48,7 @@
             (set (range 1 1238)) set-of-overlapped-lines))))
 
 
-(time (solve-02 dat))
-
-(defn solve-01 [dat]
-  (->> dat
-       get-overlap-frequencies
-       (filter (fn [[k v]] (not= 1 v)))
-       count
-       ))
 
 (solve-01 dat)
+
+(solve-02 dat)
