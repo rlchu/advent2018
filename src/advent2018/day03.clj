@@ -31,14 +31,13 @@
 (defn solve-02 [dat]
   (let [length                     (count (parse-line-num-coord-info dat))
         set-of-overlapped-lines    (->> dat
-                                     parse-line-num-coord-info
-                                     (mapcat #(apply generate-grid-points %))
-                                     (group-by (fn [[_ x]] x))
-                                     (filter (fn [[_ v]] (not= 1 (count v))))
-                                     (mapcat rest)
-                                     (mapv #(mapv first %))
-                                     flatten
-                                     set)
+                                        parse-line-num-coord-info
+                                        (mapcat #(apply generate-grid-points %))
+                                        (group-by (fn [[_ grid-point]] grid-point))
+                                        (filter (fn [[_ v]] (not= 1 (count v))))
+                                        (mapcat rest)
+                                        (reduce #(into %1 (map first %2)) #{}))
+                                        )
         set-of-integers-full-range (set (range 1 (inc length)))]
     (first (clojure.set/difference
             set-of-integers-full-range
@@ -47,3 +46,4 @@
 (solve-01 dat)
 
 (time (solve-02 dat))
+
