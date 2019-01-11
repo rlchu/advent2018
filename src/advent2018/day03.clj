@@ -26,18 +26,17 @@
        (mapcat #(apply generate-grid-points %))
        (group-by (fn [[_ x]] x))
        (filter (fn [[k v]] (not= 1 (count v))))
-       count
-       ))
+       count))
 
 (defn solve-02 [dat]
-  (let [length (count (parse-line-num-coord-info dat))
-        set-of-overlapped-lines (->> dat
+  (let [length                     (count (parse-line-num-coord-info dat))
+        set-of-overlapped-lines    (->> dat
                                      parse-line-num-coord-info
                                      (mapcat #(apply generate-grid-points %))
                                      (group-by (fn [[_ x]] x))
-                                     (filter (fn [[k v]] (not= 1 (count v))))
+                                     (filter (fn [[_ v]] (not= 1 (count v))))
                                      (mapcat rest)
-                                     (map #(map first %))
+                                     (mapv #(mapv first %))
                                      flatten
                                      set)
         set-of-integers-full-range (set (range 1 (inc length)))]
@@ -47,4 +46,4 @@
 
 (solve-01 dat)
 
-(solve-02 dat)
+(time (solve-02 dat))
