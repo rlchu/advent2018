@@ -20,7 +20,7 @@
         b (range y (+ y yl))]
     [line-num [a b]]))
 
-(defn solve-01 [dat] 
+(defn solve-01 [dat]
   (->> dat
        parse-line-num-coord-info
        (mapcat #(apply generate-grid-points %))
@@ -29,7 +29,7 @@
        count
        ))
 
-(defn solve-02 [dat] 
+(defn solve-02 [dat]
   (let [length (count (parse-line-num-coord-info dat))
         set-of-overlapped-lines (->> dat
                                      parse-line-num-coord-info
@@ -39,9 +39,8 @@
                                      (mapcat rest)
                                      (map #(map first %))
                                      flatten
-                                     set
-                                     )
-        set-of-integers-full-range (set (range 1 (inc length))) ]
+                                     set)
+        set-of-integers-full-range (set (range 1 (inc length)))]
     (first (clojure.set/difference
             set-of-integers-full-range
             set-of-overlapped-lines))))
