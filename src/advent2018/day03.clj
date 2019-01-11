@@ -10,64 +10,41 @@
 
 (def dat (clojure.string/split-lines input))
 
-(defn- parse-out-coord-info [dat]
-  (->> dat
-       (re-seq #"\d+")
-       (drop 1)
-       (map parse-int)))
-
-(defn- generate-grid-points [x y xl yl]
-  (for [a (range x (+ x xl))
-        b (range y (+ y yl))]
-    [a b]))
-
-(defn- get-overlap-frequencies [dat]
-  (frequencies
-   (->> dat
-        (map parse-out-coord-info)
-        (mapcat #(apply generate-grid-points %))
-        )))
-
-(defn solve-01 [dat]
-  (->> dat
-       get-overlap-frequencies
-       (filter (fn [[k v]] (not= 1 v)))
-       count
-       ))
-
- (solve-01 dat)
-
 (defn- parse-line-num-coord-info [dat]
   (->> dat
        (map #(re-seq #"\d+" %))
        (map #(map parse-int %))))
 
-(defn assoc-line-with-grid-points [[ln & pnts]]
-  [ln (apply generate-grid-points pnts)])
+(defn- generate-grid-points [line-num x y xl yl]
+  (for [a (range x (+ x xl))
+        b (range y (+ y yl))]
+    [line-num [a b]]))
 
-(defn compare-first-shape-to-union-of-rest [[x & xs]]
-  (let [line-num  (first x)
-        x-set     (apply set (rest x))
-        xs-set    (set (apply concat (mapcat rest xs)))]
-    (clojure.set/intersection x-set xs-set)
-    ))
-
-(defn rotate [[x & xs]]
-  (concat xs [x]))
-
-(def list-of-shapes
+(defn solve-01 [dat]
   (->> dat
        parse-line-num-coord-info
-       (map assoc-line-with-grid-points)
+       (mapcat #(apply generate-grid-points %))
+       (group-by (fn [[_ x]] x))
+       (filter (fn [[k v]] (not= 1 (count v))))
+       count
        ))
 
-(defn rotate-and-check [list-of-shapes]
-  ; painfully slow
-  (let [rotated-list (rotate list-of-shapes)
-        compare-set (compare-first-shape-to-union-of-rest rotated-list)]
-    (if (empty? compare-set)
-      (ffirst rotated-list)
-       (recur rotated-list))))
+(defn solve-02 [dat]
+  (let [length (count (parse-line-num-coord-info dat))
+        set-of-overlapped-lines (->> dat
+                                     parse-line-num-coord-info
+                                     (mapcat #(apply generate-grid-points %))
+                                     (group-by (fn [[_ x]] x))
+                                     (filter (fn [[k v]] (not= 1 (count v))))
+                                     (mapcat rest)
+                                     (map #(map first %))
+                                     flatten
+                                     set)
+        set-of-integers-full-range (set (range 1 (inc length)))]
+    (first (clojure.set/difference
+            set-of-integers-full-range
+            set-of-overlapped-lines))))
 
-(rotate-and-check list-of-shapes)
+(solve-01 dat)
 
+(solve-02 dat)
