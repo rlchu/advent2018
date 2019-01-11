@@ -33,21 +33,24 @@
         (mapcat #(apply generate-grid-points %))
         )))
 
-(def x 
-  (->> dat
-       parse-line-num-coord-info
-       (mapcat #(apply generate-grid-points %))
-       (group-by (fn [[_ x]] x))
-       (filter (fn [[k v]] (not= 1 (count v))))
-       (mapcat rest)
-       (map #(map first %))
-       flatten
-       set
-       ))
+(defn solve-02 [dat] 
+  (let [length (count (parse-line-num-coord-info dat))
+        set-of-overlapped-lines (->> dat
+                                     parse-line-num-coord-info
+                                     (mapcat #(apply generate-grid-points %))
+                                     (group-by (fn [[_ x]] x))
+                                     (filter (fn [[k v]] (not= 1 (count v))))
+                                     (mapcat rest)
+                                     (map #(map first %))
+                                     flatten
+                                     set
+                                     )]
 
-(clojure.set/difference
- (set (range 1 1238)) x)
+    (first (clojure.set/difference
+            (set (range 1 1238)) set-of-overlapped-lines))))
 
+
+(time (solve-02 dat))
 
 (defn solve-01 [dat]
   (->> dat
