@@ -19,21 +19,20 @@
 (defn- remove-lp->cascade->count [letter]
   [letter (count (cascade-reactions (remove-letter-pair letter input)))])
 
-(time
- (->> input
-      distinct
-      sort
-      (take 26)
-      (pmap remove-lp->cascade->count)
-      (sort-by (fn [[_ freq]] freq))
-      first
-      last
-      ))
-
-(time (distinct input))
-
 (defn solve-01 []
   (count (cascade-reactions input)))
 
-(time (solve-01))
+(defn solve-02 []
+  (->> input
+       distinct
+       sort
+       (take 26)
+       (pmap remove-lp->cascade->count)
+       (sort-by (fn [[_ freq]] freq))
+       first
+       last
+       ))
+
+(time (solve-02))
+
 
