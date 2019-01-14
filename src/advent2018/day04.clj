@@ -35,14 +35,10 @@
                               (map #(apply range %))
                               flatten
                               frequencies
-                              (sort-by (fn [[_ v]] v) )
+                              (sort-by (fn [[_ v]] v))
                               last
-                              first)
-        ]
+                              first)]
     (* sleepiest-guard sleepiest-minute)))
 
 (solve-01)
-
-
-
 
