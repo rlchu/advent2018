@@ -51,15 +51,15 @@
        last))
 
 (defn solve-02 []
-  (->> (keys parsed-data)
-       (map get-sleepiest-minute-and-freq)
-       (zipmap (keys parsed-data))
-       (sort-by (fn [[_ [_ freq]]] freq))
-       last
-       ((fn [[id [min _]]] (* id min)))))
+  (let [ids (keys parsed-data)]
+    (->> ids
+         (map get-sleepiest-minute-and-freq)
+         (zipmap ids)
+         (sort-by (fn [[_ [_ freq]]] freq))
+         last
+         ((fn [[id [min _]]] (* id min))))))
 
 
 (time (solve-01))
 
 (time (solve-02))
-
