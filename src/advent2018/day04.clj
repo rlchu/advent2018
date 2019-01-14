@@ -17,19 +17,19 @@
     (assoc db :on-duty (last dat))
     (update-in db [(:on-duty db)] conj (last dat))))
 
-(defn- parsed-data []
+(def parsed-data
   (dissoc (reduce parse-data {:on-duty 0} dat) :on-duty))
 
 (defn- total-sleep [[k ranges]]
   [k (apply + (map #(apply - %) (partition 2 ranges)))])
 
 (defn solve-01 []
-  (let [sleepiest-guard  (->> (parsed-data)
+  (let [sleepiest-guard  (->> parsed-data
                               (map total-sleep)
                               (sort-by (fn [[_ v]] v))
                               last
                               first)
-        sleepiest-minute (->> (get-in (parsed-data) [sleepiest-guard])
+        sleepiest-minute (->> (get-in parsed-data [sleepiest-guard])
                               (partition 2)
                               (map reverse)
                               (map #(apply range %))
@@ -40,5 +40,4 @@
                               first)]
     (* sleepiest-guard sleepiest-minute)))
 
-(solve-01)
-
+(time (solve-01))
