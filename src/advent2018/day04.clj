@@ -1,36 +1,48 @@
 (ns advent2018.day04
   (:require [advent2018.helpers :refer [parse-int]]))
 
-(def badsample "[1518-11-01 00:00] Guard #10 begins shift
-[1518-11-01 00:05] falls asleep
-[1518-11-01 00:25] wakes up
-[1518-11-01 00:30] falls asleep
-[1518-11-01 00:55] wakes up
-[1518-11-01 23:58] Guard #99 begins shift
-[1518-11-02 00:40] falls asleep
-[1518-11-02 00:50] wakes up
-[1518-11-03 00:05] Guard #10 begins shift
-[1518-11-03 00:24] falls asleep
-[1518-11-03 00:29] wakes up
-[1518-11-04 00:02] Guard #99 begins shift
-[1518-11-04 00:36] falls asleep
-[1518-11-04 00:46] wakes up
-[1518-11-05 00:03] Guard #99 begins shift
-[1518-11-05 00:45] falls asleep
-[1518-11-05 00:55] wakes up")
+(def realsample
+  (slurp "inputs/day04.input"))
 
-(def sample (slurp "inputs/day04.input"))
+(defn parse-out-numbers [dat]
+  (mapv parse-int (re-seq #"\d+" dat)))
 
+(def dat (->> realsample
+              clojure.string/split-lines
+              sort
+              (map parse-out-numbers)))
 
-(clojure.pprint/pprint (->> sample
-                            clojure.string/split-lines
-                            shuffle
-                            sort))
+(defn- parse-data [db dat]
+  (if (= 6 (count dat))
+    (assoc db :on-duty (last dat))
+    (update-in db [(:on-duty db)] conj (last dat))))
 
-(->>  "[1518-11-01 00:00] Guard #10 begins shift"
-      (re-seq #"\d+"))
+(defn- parsed-data []
+  (dissoc (reduce parse-data {:on-duty 0} dat) :on-duty))
 
-(.format (java.text.SimpleDateFormat. "[yyy-MM-dd]") (new java.util.Date))
+(defn- total-sleep [[k ranges]]
+  [k (apply + (map #(apply - %) (partition 2 ranges)))])
+
+(defn solve-01 []
+  (let [sleepiest-guard  (->> (parsed-data)
+                              (map total-sleep)
+                              (sort-by (fn [[_ v]] v))
+                              last
+                              first)
+        sleepiest-minute (->> (get-in (parsed-data) [sleepiest-guard])
+                              (partition 2)
+                              (map reverse)
+                              (map #(apply range %))
+                              flatten
+                              frequencies
+                              (sort-by (fn [[_ v]] v) )
+                              last
+                              first)
+        ]
+    (* sleepiest-guard sleepiest-minute)))
+
+(solve-01)
+
 
 
 
