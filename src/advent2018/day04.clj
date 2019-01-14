@@ -1,13 +1,13 @@
 (ns advent2018.day04
   (:require [advent2018.helpers :refer [parse-int]]))
 
-(def realsample
+(def records
   (slurp "inputs/day04.input"))
 
 (defn parse-out-numbers [dat]
   (mapv parse-int (re-seq #"\d+" dat)))
 
-(def dat (->> realsample
+(def dat (->> records
               clojure.string/split-lines
               sort
               (map parse-out-numbers)))
@@ -40,4 +40,26 @@
                               first)]
     (* sleepiest-guard sleepiest-minute)))
 
+(defn get-sleepiest-minute-and-freq [id]
+  (->> (get-in parsed-data [id])
+       (partition 2)
+       (map reverse)
+       (map #(apply range %))
+       flatten
+       frequencies
+       (sort-by (fn [[_ v]] v))
+       last))
+
+(defn solve-02 []
+  (->> (keys parsed-data)
+       (map get-sleepiest-minute-and-freq)
+       (zipmap (keys parsed-data))
+       (sort-by (fn [[_ [_ freq]]] freq))
+       last
+       ((fn [[id [min _]]] (* id min)))))
+
+
 (time (solve-01))
+
+(time (solve-02))
+
